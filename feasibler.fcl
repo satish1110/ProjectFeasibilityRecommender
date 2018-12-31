@@ -1,0 +1,51 @@
+FUNCTION_BLOCK feasibler	
+
+VAR_INPUT				
+	risk : REAL;
+	economic : REAL;
+END_VAR
+
+VAR_OUTPUT				
+	feasibility : REAL;
+END_VAR
+
+FUZZIFY risk		
+	TERM low := (0, 1) (5, 0) ; 
+	TERM med := (2.5, 0) (5,1) (7.5,0);
+	TERM high := (5, 0) (10, 1);
+END_FUZZIFY
+
+FUZZIFY economic		
+	TERM low := (0, 1) (5, 0) ; 
+	TERM med := (2.5, 0) (5,1) (7.5,0);
+	TERM high := (5, 0) (10, 1);
+END_FUZZIFY
+
+DEFUZZIFY feasibility			 
+	TERM low := (0, 1) (5, 0) ; 
+	TERM med := (2.5, 0) (5,1) (7.5,0);
+	TERM high := (5, 0) (10, 1);
+	METHOD : COG;		
+	DEFAULT := 0;		
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			
+	ACT : MIN;			
+	ACCU : MAX;			
+
+	RULE 1 : IF  risk IS  low AND economic IS low  THEN feasibility IS med;	
+	RULE 2 : IF  risk IS  low AND economic  IS med THEN feasibility IS med;
+	RULE 3 : IF  risk IS  low AND economic  IS high  THEN feasibility IS high;
+	RULE 4 : IF  risk IS  med AND economic  IS low THEN feasibility IS low;
+	RULE 5 : IF  risk IS  med AND economic  IS  med THEN feasibility IS med;
+	RULE 6 : IF  risk IS  med AND economic  IS  high THEN feasibility IS high;
+	RULE 7 : IF  risk IS  high AND economic  IS  low THEN feasibility IS low;
+	RULE 8 : IF  risk IS  high AND economic  IS  med THEN feasibility IS med;
+	RULE 9 : IF  risk IS  high AND economic  IS  high THEN feasibility IS med;
+	
+	
+	
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,51 @@
+FUNCTION_BLOCK economer	
+
+VAR_INPUT				
+	cost : REAL;
+	equipment_expertise : REAL;
+END_VAR
+
+VAR_OUTPUT				
+	economic : REAL;
+END_VAR
+
+FUZZIFY cost		
+	TERM low := (0, 1) (5, 0) ; 
+	TERM med := (2.5, 0) (5,1) (7.5,0);
+	TERM high := (5, 0) (10, 1);
+END_FUZZIFY
+
+FUZZIFY equipment_expertise			
+	TERM low := (0, 1) (5, 0) ; 
+	TERM med := (2.5, 0) (5,1) (7.5,0);
+	TERM high := (5, 0) (10, 1);
+END_FUZZIFY
+
+DEFUZZIFY economic			
+	TERM low := (0, 1) (5, 0) ; 
+	TERM med := (2.5, 0) (5,1) (7.5,0);
+	TERM high := (5, 0) (10, 1);
+	METHOD : COG;		
+	DEFAULT := 0;		
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			
+	ACT : MIN;			
+	ACCU : MAX;			
+
+	RULE 1 : IF  cost IS  low AND equipment_expertise IS low  THEN economic IS high;
+	RULE 2 : IF  cost IS  low AND equipment_expertise  IS med THEN economic IS high;
+	RULE 3 : IF  cost IS  low AND equipment_expertise  IS high  THEN economic IS med;
+	RULE 4 : IF  cost IS  med AND equipment_expertise  IS low THEN economic IS med;
+	RULE 5 : IF  cost IS  med AND equipment_expertise  IS  med THEN economic IS med;
+	RULE 6 : IF  cost IS  med AND equipment_expertise  IS  high THEN economic IS med;
+	RULE 7 : IF  cost IS  high AND equipment_expertise  IS  low THEN economic IS med;
+	RULE 8 : IF  cost IS  high AND equipment_expertise  IS  med THEN economic IS low;
+	RULE 9 : IF  cost IS  high AND equipment_expertise  IS  high THEN economic IS low;
+	
+	
+	
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
